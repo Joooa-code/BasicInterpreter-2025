@@ -129,9 +129,9 @@ BASIC 是一门**解释性**编程语言，本次大作业要求你用 C++ 实�
 
 #### 标程
 
-如果你用的是 wsl 或 linux ，请删除 `Basic-Demo-64bit_for_mac_to_be_rename` 。
+如果你用的是 wsl 或 linux ，请删除 `Basic-Demo-64bit-For-Mac` 。
 
-如果你用的是 mac ，请删除 `Bonus-Demo-64bit` ，并将 `Basic-Demo-64bit-for-Mac` 改名为 `Bonus-Demo-64bit` 。
+如果你用的是 mac ，请删除 `Basic-Demo-64bit` ，并将 `Basic-Demo-64bit-For-Mac` 改名为 `Basic-Demo-64bit` 。
 
 之后的步骤中我们认为你完成了此操作。
 
