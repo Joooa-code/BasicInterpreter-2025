@@ -18,7 +18,7 @@
   ```
   执行时会抛出`SCOPE UNDERFLOW`错误。
 
-- 如果在某个作用域中访问了未定义的变量，仍然抛出`UNDEFINED VARIABLE`错误。如下面的代码
+- 如果在某个作用域中访问了未定义的变量，仍然抛出`VARIABLE NOT DEFINED`错误。如下面的代码
   ```
   10 LET X = 1
   20 INDENT
@@ -29,7 +29,7 @@
   RUN
   QUIT
   ```
-  执行时会抛出`UNDEFINED VARIABLE`错误，因为变量`Y`在第60行访问时已经超出了其作用域。
+  执行时会抛出`VARIABLE NOT DEFINED`错误，因为变量`Y`在第60行访问时已经超出了其作用域。
 
 ### 行号
 新增命令`INDENT`和`DEDENT`可以带有行号，也可以不带行号。不带行号时，立即进入或退出作用域块；带行号时，在执行到该行时进入或退出作用域块。
