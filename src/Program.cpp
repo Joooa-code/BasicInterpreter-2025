@@ -82,10 +82,14 @@ int Program::getPC() const noexcept {
 }
 
 void Program::changePC(int line) {
-    // check if line exists
+    // if has line
     if (recorder_.hasLine(line)) {
-        programCounter_ = line;
-    }  // CHECK:if hasn't
+      programCounter_ = line;
+    }
+    else {
+      // error
+      throw BasicError("LINE NUMBER ERROR");
+    }
 }
 
 void Program::programEnd() {
