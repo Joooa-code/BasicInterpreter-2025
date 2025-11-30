@@ -75,3 +75,11 @@ int Recorder::nextLine(int line) const noexcept {
     }
     return -1;
 }
+
+// get first line
+int Recorder::firstline() const noexcept {
+  if (programs_.empty()) {
+    return -1;
+  }
+  return programs_.begin()->first;
+}

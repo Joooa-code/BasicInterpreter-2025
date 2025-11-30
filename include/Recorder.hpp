@@ -17,8 +17,7 @@ class Recorder {
   void clear() noexcept;
   void printLines() const;
   int nextLine(int line) const noexcept;
-
-  std::vector<int> getAllLines() const;  // get all line numbers
+  int firstline() const noexcept;
  private:
   // TODO.
   std::map<int, Statement*> programs_;
