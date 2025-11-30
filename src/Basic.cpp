@@ -20,6 +20,30 @@ int main() {
     }
     try {
       // TODO: The main function.
+      // lexer
+      TokenStream tokens = lexer.tokenize(line);
+
+      // parse
+      ParsedLine parsedLine = parser.parseLine(tokens, line);
+
+      if (parsedLine.getLine().has_value()) {
+        // has line number
+        int lineNumber = parsedLine.getLine().value();
+        if (parsedLine.getStatement() == nullptr) {
+          // only has line number, delete
+          program.removeStmt(lineNumber);
+        }
+        else {
+          program.addStmt(lineNumber, parsedLine.fetchStatement());
+        }
+      } else {
+        // do immediately
+        Statement* stmt = parsedLine.fetchStatement();
+        if (stmt) {
+          program.execute(stmt);
+          delete stmt; // delete
+        }
+      }
     } catch (const BasicError& e) {
       std::cout << e.message() << "\n";
     }
