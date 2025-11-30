@@ -88,7 +88,7 @@ public:
     void execute(VarState& state, Program& program) const override;
 };
 
-// REM This is a comment
+// REM
 class RemStatement : public Statement {
 public:
     RemStatement(const std::string& source);

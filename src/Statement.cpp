@@ -101,7 +101,7 @@ void IfStatement::execute(VarState& state, Program& program) const {
       program.changePC(targetLine_);
     }
     else {
-      program.changePC(program.getPC() + 1);  // CHECK:if only line number exists, remove it
+      program.changePC(program.getPC() + 1);  // CHECK:if only line number exists, remove it!
     }
 }
 
