@@ -20,7 +20,7 @@ class Program {
 
   void execute(Statement* stmt);
 
-  int getPC() const noexcept;
+  int getPC() const noexcept;  // PC:store the address of the next program to be executed.
   void changePC(int line);
   void programEnd();
 
