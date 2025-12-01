@@ -1,7 +1,7 @@
 #include "Statement.hpp"
 
 #include <iostream>
-#include <climits>
+#include <limits>
 #include <sstream>
 #include <utility>
 
@@ -51,21 +51,47 @@ void InputStatement::execute(VarState& state, Program& program) const {
     std::string input;
     std::getline(std::cin, input);
 
-    size_t pos;
-    long value = std::stol(input, &pos);
-
-    // check if all converted
-    if (pos != input.length()) {
-      throw BasicError("INVALID NUMBER");
-    }
-    // check overflow
-    if (value < INT_MIN || value > INT_MAX) {
-      throw BasicError("INVALID NUMBER");
+    if (input.empty()) {
+      std::cout << "INVALID NUMBER" << '\n';
+      continue;
     }
 
+    size_t start = 0;
+    bool is_negative = false;
+    if (input[0] == '-') {
+      if (input.length() == 1) {  // only -(negative)
+        std::cout << "INVALID NUMBER" << '\n';
+        continue;
+      }
+      start = 1;
+      is_negative = true;
+    }
+
+    bool valid = true;
+    long int value = 0;
+    for (size_t i = start; i < input.length(); i++) {
+      if (input[i] < '0' || input[i] > '9') {
+        std::cout << "INVALID NUMBER\n";
+        valid = false;
+        break;
+      }
+      int digit = input[i] - '0';
+      if (value > 214748364) {
+        // overflow
+        std::cout << "INVALID NUMBER\n";
+        valid = false;
+        break;
+      }
+      value = value * 10 + digit;
+    }
+    if (!valid) {
+      continue;
+    }
+    if (is_negative) {
+      value = -value;
+    }
     state.setValue(variable_, static_cast<int>(value));
     break;
-
   }
 }
 
