@@ -21,7 +21,7 @@ void Program::removeStmt(int line) {
 void Program::run() {
     // reset
     programEnd_ = false;
-    vars_.clear();
+    programCounter_ = -1;
     programCounter_ = recorder_.firstline();  // check if program is empty
     if (programCounter_ < 0) {
       return;  // no need to run
