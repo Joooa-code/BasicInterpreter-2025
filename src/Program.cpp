@@ -28,28 +28,14 @@ void Program::run() {
 
     // run till the end
     while (!programEnd_ && programCounter_ != -1) {
-        const Statement* stmt = recorder_.get(programCounter_);
-        if (!stmt) {
-            // find nextline
-            programCounter_ = recorder_.nextLine(programCounter_);
-            continue;
-        }
-
-        try {
-            stmt->execute(vars_, *this);
-        }
-        catch (const BasicError& e) {
-            std::cout << e.message() << "\n";
-            programCounter_ = -1; // end
-            break;
-        }
-
-        // next
-        if (!programEnd_ && programCounter_ != -1) {
-            programCounter_ = recorder_.nextLine(programCounter_);
-        }
+      const Statement* stmt = recorder_.get(programCounter_);
+      if (stmt == nullptr) {
+        throw BasicError("LINE NUMBER ERROR");
+      }
+      // find nextline
+      programCounter_ = recorder_.nextLine(programCounter_);
+      stmt->execute(vars_, *this);
     }
-
     resetAfterRun();  // CHECK:about goto and if?
 }
 
@@ -66,13 +52,7 @@ void Program::clear() {
 }
 
 void Program::execute(Statement* stmt) {
-    try {
-      stmt->execute(vars_, *this);
-    }
-    catch (const BasicError& e) {
-      std::cout << "Error: " << e.message() << '\n';
-      programEnd();
-    }
+    stmt->execute(vars_, *this);
 }
 
 

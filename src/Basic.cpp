@@ -73,12 +73,12 @@ int main() {
             if (stmt != nullptr) {
               try {
                 program.execute(stmt);
-                delete stmt;
               }
               catch (...) {
                 delete stmt;
                 throw;
               }
+              delete stmt;
             }
           }
           break;
