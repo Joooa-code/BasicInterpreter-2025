@@ -26,7 +26,6 @@ LetStatement::~LetStatement() {
 void LetStatement::execute(VarState& state, Program& program) const {
     int value = expression_->evaluate(state);
     state.setValue(variable_, value);  // name-value
-    program.changePC(program.getPC() + 1);
 }
 
 
@@ -41,25 +40,59 @@ PrintStatement::~PrintStatement() {
 void PrintStatement::execute(VarState& state, Program& program) const {
     int value = expression_->evaluate(state);
     std::cout << value << '\n';
-    program.changePC(program.getPC() + 1);
 }
 
 InputStatement::InputStatement(const std::string& source, const std::string& var)
     : Statement(source), variable_(var) {}
 
 void InputStatement::execute(VarState& state, Program& program) const {
-    int value;
-    std::cout << "?";
-    std::cin >> value;
+  while (true) {
+    std::cout << " ? ";
+    std::string input;
+    std::getline(std::cin, input);
 
-    if (std::cin.fail()) {
-      std::cin.clear();
-      std::cin.ignore(10000, '\n');
-      throw BasicError("INVALID NUMBER");
+    if (input.empty()) {
+      std::cout << "INVALID NUMBER" << '\n';
+      continue;
     }
 
-    state.setValue(variable_, value);
-    program.changePC(program.getPC() + 1);
+    size_t start = 0;
+    bool negative = false;
+    if (input[0] == '-') {
+      if (input.length() == 1) {  // only -(negative)
+        std::cout << "INVALID NUMBER" << '\n';
+        continue;
+      }
+      start = 1;
+      negative = true;
+    }
+
+    bool success = true;
+    long int value = 0;
+    for (size_t i = start; i < input.length(); i++) {
+      if (input[i] < '0' || input[i] > '9') {
+        std::cout << "INVALID NUMBER\n";
+        success = false;
+        break;
+      }
+      int digit = input[i] - '0';
+      if (value > 214748364) {
+        // overflow
+        std::cout << "INVALID NUMBER\n";
+        success = false;
+        break;
+      }
+      value = value * 10 + digit;
+    }
+    if (!success) {
+      continue;
+    }
+    if (negative) {
+      value = -value;
+    }
+    state.setValue(variable_, static_cast<int>(value));
+    break;
+  }
 }
 
 GotoStatement::GotoStatement(const std::string& source, int line)
@@ -100,9 +133,7 @@ void IfStatement::execute(VarState& state, Program& program) const {
     if (condition) {
       program.changePC(targetLine_);
     }
-    else {
-      program.changePC(program.getPC() + 1);  // CHECK:if only line number exists, remove it!
-    }
+
 }
 
 EndStatement::EndStatement(const std::string& source) : Statement(source) {}
@@ -113,6 +144,4 @@ void EndStatement::execute(VarState& state, Program& program) const {
 
 RemStatement::RemStatement(const std::string& source) : Statement(source) {}
 
-void RemStatement::execute(VarState& state, Program& program) const {
-  program.changePC(program.getPC() + 1);
-}
+void RemStatement::execute(VarState& state, Program& program) const {}
