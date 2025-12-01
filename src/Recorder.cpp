@@ -5,7 +5,10 @@
 
 // delete
 Recorder::~Recorder() {
-    clear();
+  for (auto it = programs_.begin(); it != programs_.end(); ++it) {
+    delete it->second;
+  }
+  programs_.clear();
 }
 
 // Insert or cover specified lines
@@ -49,18 +52,15 @@ bool Recorder::hasLine(int line) const noexcept {
 
 // clear
 void Recorder::clear() noexcept {
-  auto it = programs_.begin();
-  while (it != programs_.end()) {
+  for (auto it = programs_.begin(); it != programs_.end(); ++it) {
     delete it->second;
-    ++it;                   // move to the next
   }
   programs_.clear();
 }
 
 // print lines
 void Recorder::printLines() const {
-  auto it = programs_.begin();
-  while (it != programs_.end()) {
+  for (auto it = programs_.begin(); it != programs_.end(); ++it) {
     std::cout << it->first << " " << it->second->text() << '\n';
     ++it;
   }
