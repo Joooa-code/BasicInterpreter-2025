@@ -8,6 +8,15 @@
 #include "Token.hpp"
 #include "utils/Error.hpp"
 
+void printHelp() {
+  std::cout << "Interpreter Commands:" << '\n';
+  std::cout << "  RUN     - Begin program execution starting from the smallest line number" << '\n';
+  std::cout << "  LIST    - List all program lines in ascending order by line number" << '\n';
+  std::cout << "  CLEAR   - Clear all program lines" << '\n';
+  std::cout << "  QUIT    - Exit the interpreter" << '\n';
+  std::cout << "  HELP    - Print this help message" << '\n';
+}
+
 int main() {
   Lexer lexer;
   Parser parser;
@@ -18,35 +27,66 @@ int main() {
     if (line.empty()) {
       continue;
     }
+
     try {
-      // TODO: The main function.
-      // lexer
       TokenStream tokens = lexer.tokenize(line);
+      const Token* cur_t = tokens.peek();
 
-      // parse
-      ParsedLine parsedLine = parser.parseLine(tokens, line);
-
-      if (parsedLine.getLine().has_value()) {
-        // has line number
-        int lineNumber = parsedLine.getLine().value();
-        if (parsedLine.getStatement() == nullptr) {
-          // only has line number, delete
-          program.removeStmt(lineNumber);
-        }
-        else {
-          program.addStmt(lineNumber, parsedLine.fetchStatement());
-        }
-      } else {
-        // do immediately
-        Statement* stmt = parsedLine.fetchStatement();
-        if (stmt) {
-          program.execute(stmt);
-          delete stmt; // delete
-        }
+      switch (cur_t->type) {
+        case TokenType::HELP:
+          printHelp();
+          break;
+        case TokenType::QUIT:
+          return 0;
+        case TokenType::CLEAR:
+          program.clear();
+          break;
+        case TokenType::LIST:
+          program.list();
+          break;
+        case TokenType::RUN:
+          program.run();
+          break;
+        default:
+          ParsedLine pline = parser.parseLine(tokens, line);
+          if (pline.getLine().has_value()) {
+            // has line number
+            int lineNumber = pline.getLine().value();
+            Statement* stmt = pline.fetchStatement();
+            if (stmt != nullptr) {
+              try {
+                program.addStmt(lineNumber, stmt);
+              }
+              catch (...) {
+                delete stmt;
+                throw;
+              }
+            }
+            else {
+              // only has line number
+              program.removeStmt(lineNumber);
+            }
+          }
+          else {
+            // do immediately
+            Statement* stmt = pline.fetchStatement();
+            if (stmt != nullptr) {
+              try {
+                program.execute(stmt);
+                delete stmt;
+              }
+              catch (...) {
+                delete stmt;
+                throw;
+              }
+            }
+          }
+          break;
       }
     } catch (const BasicError& e) {
-      std::cout << e.message() << "\n";
+      std::cout << e.message() << std::endl;
     }
+
   }
   return 0;
 }
