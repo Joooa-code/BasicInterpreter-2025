@@ -9,9 +9,9 @@
 
 using namespace std;
 
-const string traceFolder = "../test/";
+const string traceFolder = "./test/";
 const string defaultStudentBasic = "./code";
-const string defaultStanderBasic = "../Basic-Demo-64bit";
+const string defaultStanderBasic = "./Basic-Demo-64bit";
 
 const int traceCount = 100;
 const string traces[traceCount] = {
