@@ -61,8 +61,8 @@ void Recorder::clear() noexcept {
 // print lines
 void Recorder::printLines() const {
   for (auto it = programs_.begin(); it != programs_.end(); ++it) {
-    std::cout << it->first << " " << it->second->text() << '\n';
-    ++it;
+    const Statement* stmt = it->second;
+    std::cout << stmt->text() << '\n';
   }
 } 
 
